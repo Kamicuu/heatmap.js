@@ -226,6 +226,11 @@ var Canvas2dRenderer = (function Canvas2dRendererClosure() {
         var templateAlpha = (value-min)/(max-min);
         // this fixes #176: small values are not visible because globalAlpha < .01 cannot be read from imageData
         edgeCtx.globalAlpha = templateAlpha < .01 ? .01 : templateAlpha;
+		
+		if(tpl.height<=0 || tpl.width<=0){
+          tpl.height=1;
+          tpl.width=1;
+        }
         
         if (!this._absolute || !this._useGradientOpacity) {
           edgeCtx.drawImage(tpl, rectX, rectY);
@@ -239,6 +244,12 @@ var Canvas2dRenderer = (function Canvas2dRendererClosure() {
           } else {
             tpl = this._templates[radius].intensities[intensity];
           }
+		  
+			if(tpl.height<=0 || tpl.width<=0){
+				tpl.height=1;
+				tpl.width=1;
+			}
+		  
           faceCtx.globalCompositeOperation = 'lighten';
           faceCtx.drawImage(tpl, rectX, rectY);
         }
@@ -279,9 +290,14 @@ var Canvas2dRenderer = (function Canvas2dRendererClosure() {
       }
       if (x + width > maxWidth) {
         width = maxWidth - x;
+      }else if(width<=1){
+        width=1
       }
+
       if (y + height > maxHeight) {
         height = maxHeight - y;
+      }else if(height<=1){
+        height=1
       }
 
       var img = this.edgeCtx.getImageData(x, y, width, height);
